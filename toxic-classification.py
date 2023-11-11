@@ -2,6 +2,10 @@ import pandas as pd
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
+from flask import Flask, request, render_template
+
+
+app = Flask(__name__)
 
 def clean_text(text):
     text = text.lower()
@@ -76,13 +80,32 @@ def predict_identity_hate(text):
     res = identity_hate.predict_proba(value[0])
     return res[:, 1][0]
 
-text = "anjing bangsat tai"
 
-print("your text: ", text)
-print("")
-print("Toxic: ", predict_toxic(text))
-print("Severe Toxic: ", predict_severe_toxic(text))
-print("Obscene: ", predict_obscene(text))
-print("Threat: ", predict_threat(text))
-print("Insult: ", predict_insult(text))
-print("Identity Hate: ", predict_identity_hate(text))
+@app.route("/")
+def hello_world():
+    return render_template('index.html')
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    text = request.json['text']
+    return {
+        "text": text,
+        "result": {
+            "toxic": predict_toxic(text),
+            "severe_toxic": predict_severe_toxic(text),
+            "obscene": predict_obscene(text),
+            "threat": predict_threat(text),
+            "insult": predict_insult(text),
+            "identity_hate": predict_identity_hate(text),
+        }
+    }
+
+
+# print("your text: ", text)
+# print("")
+# print("Toxic: ", predict_toxic(text))
+# print("Severe Toxic: ", predict_severe_toxic(text))
+# print("Obscene: ", predict_obscene(text))
+# print("Threat: ", predict_threat(text))
+# print("Insult: ", predict_insult(text))
+# print("Identity Hate: ", predict_identity_hate(text))
