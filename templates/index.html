@@ -1,94 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toxic Classification</title>
-    <style>
-        body {
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-            font-family: sans-serif;
-        }
-        .container {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            max-width: 1024px;
-            background-color: white;
-            margin: auto;
-            padding-inline: 8px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h1 {
-            background-color: transparent;
-            color: rgb(38, 38, 38);
-            text-align: center;
-        }
-
-        textarea {
-            padding-block: 8px;
-            padding-inline: 6px;
-            min-width: 69%;
-            border-radius: 6px;
-            height: 100px;
-        }
-        button {
-            margin-top: 6px;
-            background-color: blue;
-            border: 0;
-            padding-block: 12px;
-            border-radius: 6px;
-            min-width: 70%;
-            color: white;
-        }
-        p {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  </head>
+  <body>
     <div class="container">
-        <h1>Toxic Classification</h1>
-        <textarea type="text" name="" id="input"></textarea>
-        <button onclick="proses()">Proses</button>
-        <p id="hasil"></p>
+      <h1>Toxic Classification</h1>
+      <textarea type="text" name="" id="input" placeholder="Masukkan text disini"></textarea>
+      <button onclick="proses()">Proses</button>
+      <p id="hasil"></p>
     </div>
 
-    <script>
-        const input = document.getElementById('input')
-        const result = document.getElementById('hasil')
-
-        const proses = async () => {
-            const res = await fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                body: JSON.stringify({
-                    "text": input.value
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-
-            const data = await res.json()
-            
-            let kontenHtml = `
-                <strong>Result</strong><br>
-                Toxic: ${data.result.toxic}<br>
-                Severe Toxic: ${data.result.severe_toxic}<br>
-                Obscene: ${data.result.obscene}<br>
-                Threat: ${data.result.threat}<br>
-                Insult: ${data.result.insult}<br>
-                Identity Hate: ${data.result.identity_hate}<br>
-            `
-
-            result.innerHTML = kontenHtml
-
-            if(input.value == '') result.innerHTML = ''
-        }
-    </script>
-</body>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
 </html>
