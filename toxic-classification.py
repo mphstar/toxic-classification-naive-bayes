@@ -4,7 +4,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 from flask import Flask, request, render_template
 
-
 app = Flask(__name__)
 
 def clean_text(text):
@@ -25,8 +24,16 @@ def clean_text(text):
     return text
 
 df = pd.read_csv("dataset/train.csv")
-# df['label'] = (df[['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']].sum(axis=1) > 0 ).astype(int)
-# df = df[['comment_text', 'toxic', 'severe_toxic', 'obscene ', 'threat', 'insult', 'identity_hate']].rename(columns={'comment_text': 'text'})
+
+# EDA
+df.info()
+
+# print(df.describe())
+
+# Splitting Dataset
+komentar = df['comment_text']  
+label = df['toxic']  # toxic "sesuaikan nama label yang sudah didapat" 
+
 
 
 vec = TfidfVectorizer()
@@ -49,6 +56,7 @@ insult.fit(X, df['insult'])
 
 identity_hate = MultinomialNB()
 identity_hate.fit(X, df['identity_hate'])
+
 
 def predict_toxic(text):
     value = vec.transform([clean_text(text)])
@@ -80,7 +88,6 @@ def predict_identity_hate(text):
     res = identity_hate.predict_proba(value[0])
     return res[:, 1][0]
 
-
 @app.route("/")
 def hello_world():
     return render_template('index.html')
@@ -100,12 +107,3 @@ def predict():
         }
     }
 
-
-# print("your text: ", text)
-# print("")
-# print("Toxic: ", predict_toxic(text))
-# print("Severe Toxic: ", predict_severe_toxic(text))
-# print("Obscene: ", predict_obscene(text))
-# print("Threat: ", predict_threat(text))
-# print("Insult: ", predict_insult(text))
-# print("Identity Hate: ", predict_identity_hate(text))
