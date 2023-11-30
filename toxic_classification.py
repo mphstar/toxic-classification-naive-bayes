@@ -32,7 +32,13 @@ df.info()
 
 # Splitting Dataset
 komentar = df['comment_text']  
-label = df['toxic']  # toxic "sesuaikan nama label yang sudah didapat" 
+
+label_toxic = df['toxic']
+label_severe_toxic = df['severe_toxic']
+label_obscene = df['obscene']
+label_threat = df['threat']
+label_insult = df['insult']
+label_identity_hate = df['identity_hate']
 
 
 

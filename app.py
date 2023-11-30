@@ -1,0 +1,1 @@
+from toxic_classification import app as application
